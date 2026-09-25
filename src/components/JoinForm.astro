@@ -1,0 +1,30 @@
+---
+// Posts straight to the existing Mailchimp audience (same action URL and
+// field names as the old embed), without Mailchimp's CSS or JS.
+import { isPreview } from '~/lib/env';
+
+const action = 'https://versen.us7.list-manage.com/subscribe/post?u=e6afd6c1e7c0289f4566d4fe5&id=5228435632&f_id=00e599e4f0';
+---
+
+{isPreview && <p class="callout warning">This is a preview of the new website, so the form is switched off. To join VERSEN now, use <a href="https://www.versen.nl/users/new">the form on the live site</a>.</p>}
+<form class="form" action={isPreview ? undefined : action} method="post" target="_blank" inert={isPreview} aria-disabled={isPreview ? "true" : undefined}>
+  <p class="hint"><span class="req">*</span> required</p>
+  <div><label for="mce-EMAIL">Email address <span class="req">*</span></label><input type="email" name="EMAIL" id="mce-EMAIL" autocomplete="email" required /></div>
+  <div><label for="mce-FNAME">First name <span class="req">*</span></label><input type="text" name="FNAME" id="mce-FNAME" autocomplete="given-name" required /></div>
+  <div><label for="mce-LNAME">Last name <span class="req">*</span></label><input type="text" name="LNAME" id="mce-LNAME" autocomplete="family-name" required /></div>
+  <div><label for="mce-AFFIL1">First affiliation <span class="req">*</span></label><input type="text" name="AFFIL1" id="mce-AFFIL1" autocomplete="organization" required /></div>
+  <div><label for="mce-AFFIL2">Second affiliation</label><input type="text" name="AFFIL2" id="mce-AFFIL2" /></div>
+  <div><label for="mce-JOBTITLE">Job title</label><input type="text" name="JOBTITLE" id="mce-JOBTITLE" autocomplete="organization-title" /></div>
+  <fieldset class="choice">
+    <legend>List your name and affiliation on <a href="/about/members/">versen.nl</a>?</legend>
+    <label><input type="radio" name="group[79508]" value="1" /> Yes</label>
+    <label><input type="radio" name="group[79508]" value="2" /> No</label>
+  </fieldset>
+  <fieldset class="choice">
+    <legend>Receive the newsletter?</legend>
+    <label><input type="radio" name="group[79512]" value="4" /> Yes</label>
+    <label><input type="radio" name="group[79512]" value="8" /> No</label>
+  </fieldset>
+  <div aria-hidden="true" style="position:absolute;left:-5000px"><input type="text" name="b_e6afd6c1e7c0289f4566d4fe5_5228435632" tabindex="-1" value="" /></div>
+  <div><button class="btn btn-primary" type="submit">Become a member</button></div>
+</form>

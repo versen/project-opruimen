@@ -1,0 +1,17 @@
+---
+import Page from '~/layouts/Page.astro';
+import NewsCard from '~/components/NewsCard.astro';
+import { allNews } from '~/lib/news';
+
+const news = (await allNews()).slice(0, 24);
+---
+
+<Page title="News" description="Awards, appointments, calls, defences and events from the Dutch software engineering community." full>
+  <ul class="news-list">
+    {news.map((item) => <NewsCard item={item} />)}
+  </ul>
+  <p class="btn-row">
+    <a class="btn btn-ghost" href="/news/archive/">Browse all news by year</a>
+    <a class="btn btn-ghost" href="/resources/press/">Suggest a news item</a>
+  </p>
+</Page>

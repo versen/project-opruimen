@@ -1,0 +1,9 @@
+---
+import Page from '~/layouts/Page.astro';
+import Cards from '~/components/Cards.astro';
+import { sections } from '~/data/nav';
+---
+
+<Page title="Page not found" description="The page may have moved when the site was reorganized. One of these should get you there:" full>
+  <Cards items={sections.map((s) => ({ label: s.label, href: s.href, blurb: s.children.slice(0, 3).map((c) => c.label).join(' · ') }))} />
+</Page>

@@ -1,0 +1,25 @@
+---
+// Renders every page in src/content/pages/ at its folder path
+// (about/board.mdx -> /about/board/, about/index.mdx -> /about/).
+import { getCollection, render } from 'astro:content';
+import Page from '~/layouts/Page.astro';
+import GroupMembers from '~/components/GroupMembers.astro';
+
+export async function getStaticPaths() {
+  const pages = await getCollection('pages');
+  return pages.map((page) => ({
+    params: { slug: page.id.replace(/(^|\/)index$/, '') || undefined },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props;
+const { Content } = await render(page);
+const wide = ['resources/proposal-support', 'about/board', 'about/members', 'awards/winners'].includes(page.id);
+---
+
+<Page title={page.data.title} description={page.data.description} full={wide}>
+  {page.data.archived && <p class="callout warning">This working group has been archived.</p>}
+  <Content />
+  {page.data.group && !page.body?.includes('<GroupMembers') && <GroupMembers group={page} />}
+</Page>

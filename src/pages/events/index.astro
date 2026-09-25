@@ -1,0 +1,50 @@
+---
+import Page from '~/layouts/Page.astro';
+import { upcoming, past, type EventItem } from '~/data/events';
+
+const years = [...new Set(past.map((e) => e.year))];
+const ext = (e: EventItem) => e.href && /^https?:/.test(e.href);
+---
+
+<Page title="Events" description="The yearly SEN Symposium, VERSEN seminar afternoons, and tracks we co-organize with partners." full>
+  <section class="feature">
+    <div>
+      <span class="kicker">Every year</span>
+      <h2>SEN Symposium</h2>
+      <p>The national meeting of the Dutch software engineering community, with talks, the thesis-award ceremony and our honorary fellows. Organized by the <a href="/working-groups/symposium/">Symposium working group</a>.</p>
+    </div>
+    <a class="btn btn-primary" href="https://www.sen-symposium.nl/">sen-symposium.nl ↗</a>
+  </section>
+
+  <h2>Upcoming</h2>
+  {
+    upcoming.length ? (
+      <ul class="event-list">
+        {upcoming.map((e) => (
+          <li><a href={e.href}>{e.title}</a><span class:list={['tag', e.kind.toLowerCase()]}>{e.kind}</span>{(e.date || e.place) && <span class="meta">{[e.date, e.place].filter(Boolean).join(' · ')}</span>}</li>
+        ))}
+      </ul>
+    ) : (
+      <p class="muted">Nothing announced yet — new events appear here and in the <a href="/news/">news</a>. Want to organize one? Talk to the <a href="/working-groups/community-events/">Community Events group</a>.</p>
+    )
+  }
+
+  <h2>Past events</h2>
+  {
+    years.map((y) => (
+      <>
+        <h3>{y}</h3>
+        <ul class="event-list">
+          {past.filter((e) => e.year === y).map((e) => (
+            <li>
+              {e.href ? <a href={e.href}>{e.title}{ext(e) && ' ↗'}</a> : <span>{e.title}</span>}
+              <span class:list={['tag', e.kind.toLowerCase()]}>{e.kind}</span>
+              {e.place && <span class="meta">{e.place}</span>}
+            </li>
+          ))}
+        </ul>
+      </>
+    ))
+  }
+  <p class="muted">Slides and material from our events are collected on <a href="https://osf.io/mg29a/">OSF</a>.</p>
+</Page>

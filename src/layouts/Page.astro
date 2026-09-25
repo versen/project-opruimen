@@ -1,0 +1,59 @@
+---
+import Base from './Base.astro';
+import { sectionFor, sitePath } from '~/data/nav';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Wider content column, for tables and grids. */
+  full?: boolean;
+}
+
+const { title, description, full = false } = Astro.props;
+const path = sitePath(Astro.url.pathname);
+const section = sectionFor(path);
+const isCurrent = (href: string) => href === path || href === path + '/';
+const atHub = section && isCurrent(section.href);
+---
+
+<Base title={title} description={description}>
+  <div class="page-head">
+    <div class="wrap">
+      {
+        section && !atHub && (
+          <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="/">Home</a><span aria-hidden="true">/</span><a href={section.href}>{section.label}</a>
+          </nav>
+        )
+      }
+      <slot name="kicker" />
+      <h1>{title}</h1>
+      {description && <p class="lede">{description}</p>}
+      <slot name="head" />
+    </div>
+  </div>
+  <div class:list={["wrap page-grid", { "no-subnav": !section }]}>
+    {
+      section && (
+        <aside class="subnav">
+          <nav aria-label={`${section.label} pages`}>
+            <p class="subnav-title">{section.label}</p>
+            <ul>
+              {section.children.map((c) => (
+                <li>
+                  <a href={c.href} aria-current={isCurrent(c.href) ? 'page' : undefined}>
+                    {c.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
+      )
+    }
+    <article class:list={['prose', { full }]}>
+      <slot />
+    </article>
+  </div>
+  <slot name="after-main" slot="after-main" />
+</Base>

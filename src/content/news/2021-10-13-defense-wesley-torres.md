@@ -1,0 +1,14 @@
+---
+title: "PhD defence Weslley Silva Torres"
+date: 2021-10-13
+---
+
+On September 21 Weslley Silva Torres has successfully defended his PhD thesis "Supporting Multi-Domain Model Management". The thesis has been co-supervised by Prof. dr. Alexander Serebrenik and prof. dr. Mark G.J. van den Brand.
+
+In his thesis dr. Silva Torres has focused on multi-domain model management. Managing models that belong to the same domain might not be a complex task because of the features provided by the available development tools. However, managing interrelated models of different domains is challenging. A robot is an example of such a multi-domain system. To develop it one might need to combine models created by experts from mechanics, electronics and software domains. These models might be created using domain specific tools of each domain, and a change in one model of one domain might impact a model from a different domain causing inconsistency in the entire system.
+
+The thesis therefore aims to facilitate the evolution of the models in this multi-domain setting. It starts with a systematic literature review in order to identify the open issues, and strategies used to manage models from different domains. Dr. Silva Torres identified that making explicit the relationship between models from different domains can support the models maintenance, making it easy to recognize affected models because of a change. The following step was to investigate ways of extracting information from different engineering models that were created using different modeling notations. For this goal, we required a uniform approach that would be independent from the peculiarities of the notations. This uniform approach can only be based on elements typically present in various modeling notations, i.e., text, boxes, and lines. Thus, dr. Silva Torres investigated the suitability of optical character recognition (OCR) for extracting textual elements from models from different domains. He also identified the common errors made by the off-the-shelf OCR services, and we proposed two approaches to correct one of these errors. After that, he used name matching techniques on the textual elements extracted by OCR to identify relationships between models from different domains.
+
+To conclude, dr. Silva Torres created an infrastructure that combines all the previous elements into one single tool that can also store the relationships in a structured manner making it easier to maintain the consistency of an entire system. He evaluated it by means of an observational study with a multidisciplinary team that builds autonomous robots designed to play football.
+
+The thesis can be consulted online: [https://research.tue.nl/files/176640811/20210921_Silva_Torres_hf.pdf](https://research.tue.nl/files/176640811/20210921_Silva_Torres_hf.pdf)

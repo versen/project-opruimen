@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="874px" height="1119px" viewBox="0 0 874 1119" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63 (92445) - https://sketch.com -->
+    <title>Group 3</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="0 0 1440 0 1440 1201 0 1201"/>
+    </defs>
+    <g id="UI-desktop-rev.-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.504208519">
+        <g id="Desktop-HD-about" transform="translate(-566.000000, 0.000000)">
+            <g id="Group-3" transform="translate(0.000000, -80.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"/>
+                </mask>
+                <g id="Clip-2"/>
+                <path d="M560,46.9521465 C560,46.9521465 580.744606,215.190881 725.671099,318.782693 C798.209659,370.633944 799.4169,457.757416 772.651596,602.970583 C745.884076,748.185963 868.050203,851.828693 1022.39317,885.305535 C1247.40736,934.110619 1196.90925,1206.1714 1437.80364,1198.52942 C1678.70024,1190.88743 1737,1201 1737,1201 L1704.85417,0 L560,46.9521465 Z" id="Fill-1" fill="#E3EAFF" mask="url(#mask-2)"/>
+            </g>
+        </g>
+    </g>
+</svg>

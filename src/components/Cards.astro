@@ -1,0 +1,22 @@
+---
+// Card grid for hub pages. Pass a nav section label to list its pages,
+// or `items` directly.
+import { sections, type NavLink } from '~/data/nav';
+
+interface Props { section?: string; items?: NavLink[]; skipSelf?: boolean }
+const { section, items, skipSelf = true } = Astro.props;
+const s = sections.find((x) => x.label === section);
+const links = items ?? (s ? s.children.filter((c) => !skipSelf || c.href !== s.href) : []);
+const external = (href: string) => /^https?:/.test(href);
+---
+
+<div class="card-grid">
+  {
+    links.map((l) => (
+      <div class="card">
+        <h3><a href={l.href} class:list={{ ext: external(l.href) }}>{l.label}</a></h3>
+        {l.blurb && <p>{l.blurb}</p>}
+      </div>
+    ))
+  }
+</div>

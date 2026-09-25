@@ -1,0 +1,30 @@
+---
+import { render } from 'astro:content';
+import Page from '~/layouts/Page.astro';
+import { allNews, excerpt, formatDate, newsUrl, type News } from '~/lib/news';
+
+export async function getStaticPaths() {
+  const news = await allNews();
+  return news.map((item, i) => ({
+    params: { id: item.id },
+    props: { item, newer: news[i - 1], older: news[i + 1] },
+  }));
+}
+
+interface Props { item: News; newer?: News; older?: News }
+const { item, newer, older } = Astro.props;
+const { Content } = await render(item);
+const { title, date, image } = item.data;
+// Many items already open with their picture; don't show it twice.
+const showHero = image && !(item.body ?? '').includes(image.split('/').pop()!);
+---
+
+<Page title={title} description={excerpt(item.body ?? '', 160)}>
+  <p slot="head" class="article-meta"><time datetime={date.toISOString().slice(0, 10)}>{formatDate(date)}</time></p>
+  {showHero && <figure class="article-hero"><img src={image} alt="" /></figure>}
+  <Content />
+  <nav class="pager" aria-label="More news">
+    {older ? <a class="prev" href={newsUrl(older)}><small>← Older</small>{older.data.title}</a> : <span />}
+    {newer && <a class="next" href={newsUrl(newer)}><small>Newer →</small>{newer.data.title}</a>}
+  </nav>
+</Page>

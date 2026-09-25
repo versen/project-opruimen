@@ -1,0 +1,31 @@
+---
+import Page from '~/layouts/Page.astro';
+import { allNews, newsUrl } from '~/lib/news';
+
+const news = await allNews();
+const years = [...new Set(news.map((n) => n.data.date.getUTCFullYear()))];
+const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', timeZone: 'UTC' });
+---
+
+<Page title="News archive" description={`All ${news.length} news items, newest first.`}>
+  <ul class="year-jump" aria-label="Jump to year">
+    {years.map((y) => <li><a href={`#y${y}`}>{y}</a></li>)}
+  </ul>
+  {
+    years.map((y) => (
+      <section>
+        <h2 id={`y${y}`}>{y}</h2>
+        <ul class="archive-list">
+          {news
+            .filter((n) => n.data.date.getUTCFullYear() === y)
+            .map((n) => (
+              <li>
+                <time class="date" datetime={n.data.date.toISOString().slice(0, 10)}>{fmt(n.data.date)}</time>
+                <a href={newsUrl(n)}>{n.data.title}</a>
+              </li>
+            ))}
+        </ul>
+      </section>
+    ))
+  }
+</Page>

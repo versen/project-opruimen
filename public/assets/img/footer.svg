@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="278px" height="155px" viewBox="0 0 278 155" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63 (92445) - https://sketch.com -->
+    <title>Group 3</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="0 0 300 0 300 184 0 184"/>
+    </defs>
+    <g id="UI-desktop-rev.-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.5">
+        <g id="Desktop-HD-home" transform="translate(0.000000, -869.000000)">
+            <g id="Group-3" transform="translate(0.000000, 840.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"/>
+                </mask>
+                <g id="Clip-2"/>
+                <path d="M-198.573686,-228 C-198.573686,-228 -137.147372,20.9677028 16.4214693,31.2008147 C169.990311,41.4318898 268.9564,102.820377 282.607598,208.546918 C296.256757,314.273459 443,406.357209 443,406.357209 L-260,420 L-198.573686,-228 Z" id="Fill-1" fill="#E3EAFF" mask="url(#mask-2)"/>
+            </g>
+        </g>
+    </g>
+</svg>

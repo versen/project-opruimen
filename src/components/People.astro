@@ -1,0 +1,18 @@
+---
+interface Person { name: string; href?: string; photo?: string; role?: string; org?: string }
+interface Props { people: Person[] }
+const { people } = Astro.props;
+---
+
+<ul class="people">
+  {
+    people.map((p) => (
+      <li class="person">
+        {p.photo && <img src={p.photo} alt="" loading="lazy" decoding="async" />}
+        <strong>{p.href ? <a href={p.href}>{p.name}</a> : p.name}</strong>
+        {p.role && <span class="role">{p.role}</span>}
+        {p.org && <div class="org">{p.org}</div>}
+      </li>
+    ))
+  }
+</ul>

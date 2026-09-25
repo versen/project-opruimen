@@ -1,0 +1,152 @@
+---
+import Base from '~/layouts/Base.astro';
+import NewsCard from '~/components/NewsCard.astro';
+import { allNews } from '~/lib/news';
+import { stats, spotlights, activities, endorsements } from '~/data/home';
+import { upcoming } from '~/data/events';
+import { groups, groupUrl, chairsOf, membersOf } from '~/lib/groups';
+
+const latest = (await allNews()).slice(0, 3);
+const featured = upcoming.slice(0, 1);
+const shown = spotlights.filter((s) => s.show).slice(0, 3 - featured.length);
+const ext = (href: string) => /^https?:/.test(href);
+const activeGroups = await groups();
+const volunteers = new Set(activeGroups.flatMap((g) => membersOf(g).map((m) => m.name))).size;
+---
+
+<Base>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="kicker">VEReniging Software Engineering Nederland</span>
+        <h1>The Dutch community for <em>software engineering</em></h1>
+        <p class="lede">
+          VERSEN brings together researchers, educators and practitioners to advance the field, raise public awareness,
+          secure research funding, and bring academic results to society.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/join/">Join VERSEN — free</a>
+          <a class="btn btn-ghost" href="/about/manifesto/">Read the manifesto</a>
+        </div>
+        <ul class="stats">
+          {stats.map((s) => <li><strong>{s.value}</strong><span>{s.label}</span></li>)}
+        </ul>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <img src="/assets/img/cover-image.svg" alt="" width="560" height="420" />
+      </div>
+    </div>
+  </section>
+
+  {
+    (featured.length > 0 || shown.length > 0) && (
+      <section class="wrap" aria-labelledby="spot-h">
+        <div class="notices">
+        <h2 id="spot-h" class="notices-label">{featured.length ? 'Coming up' : 'Right now'}</h2>
+        <ul>
+          {featured.map((e) => (
+            <li>
+              <a href={e.href}>
+                <span class="tag versen">Event</span>
+                <span class="notice-title">{e.title}{e.date && <span class="muted"> · {e.date}</span>}</span>
+              </a>
+            </li>
+          ))}
+          {shown.map((s) => (
+            <li>
+              <a href={s.href}>
+                <span class="tag">{s.kicker}</span>
+                <span class="notice-title">{s.title}{ext(s.href) && ' ↗'}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section wrap" aria-labelledby="news-h">
+    <div class="section-head">
+      <h2 id="news-h">Latest news</h2>
+      <a href="/news/" class="arrow">All news </a>
+    </div>
+    <ul class="news-list">
+      {latest.map((item) => <NewsCard item={item} />)}
+    </ul>
+  </section>
+
+  <section class="section wrap" aria-labelledby="do-h">
+    <div class="section-head">
+      <h2 id="do-h">What we do</h2>
+      <a href="/about/" class="arrow">About VERSEN </a>
+    </div>
+    <div class="activities">
+      {
+        activities.map((a) => (
+          <div class="activity">
+            <h3><a href={a.href}>{a.title}</a></h3>
+            <p>{a.text}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section wrap" aria-labelledby="wg-h">
+    <div class="section-head">
+      <h2 id="wg-h">VERSEN runs on its working groups</h2>
+      <a href="/working-groups/" class="arrow">All working groups </a>
+    </div>
+    <p class="muted">{volunteers} people in {activeGroups.length} groups do the work behind our events, funding, education and communication.</p>
+    <div class="groups-row">
+      {
+        activeGroups.map((g) => {
+          const chairs = chairsOf(g).map((m) => m.name);
+          const n = membersOf(g).length;
+          return (
+            <div class="card group-card">
+              <h3><a href={groupUrl(g)}>{g.data.title}</a></h3>
+              {g.data.description && <p>{g.data.description}</p>}
+              <p class="group-meta">
+                {chairs.length > 0 && <span>{chairs.length > 1 ? 'Chairs' : 'Chair'}: <strong>{chairs.join(', ')}</strong></span>}
+                {n > 0 && <span>{n} {n === 1 ? 'member' : 'members'}</span>}
+              </p>
+            </div>
+          );
+        })
+      }
+      <div class="card join-card">
+        <h3><a href="/working-groups/">Join or start a group</a></h3>
+        <p>Any member can take part, or propose a new working group.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap" aria-labelledby="end-h">
+    <div class="section-head">
+      <h2 id="end-h">Why the manifesto matters</h2>
+      <a href="/about/manifesto/" class="arrow">Read the manifesto </a>
+    </div>
+    <div class="endorse">
+      {
+        endorsements.map((e) => (
+          <figure>
+            <blockquote>“{e.quote}”</blockquote>
+            <figcaption><strong>{e.name}</strong>{e.org}</figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="join-band" slot="after-main">
+    <div class="wrap">
+      <div>
+        <h2>Work on software engineering in the Netherlands?</h2>
+        <p>Membership is free and brings you the VERSEN newsletter and invitations to our events.</p>
+      </div>
+      <a class="btn" href="/join/">Become a member</a>
+    </div>
+  </section>
+</Base>

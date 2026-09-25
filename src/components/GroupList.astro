@@ -1,0 +1,26 @@
+---
+import { groups, groupUrl, chairsOf, membersOf } from '~/lib/groups';
+
+interface Props { archived?: boolean }
+const { archived = false } = Astro.props;
+const list = await groups(archived);
+---
+
+<div class="card-grid">
+  {
+    list.map((g) => {
+      const chairs = chairsOf(g).map((m) => m.name);
+      const n = membersOf(g).length;
+      return (
+        <div class="card group-card">
+          <h3><a href={groupUrl(g)}>{g.data.title}</a></h3>
+          {g.data.description && <p>{g.data.description}</p>}
+          <p class="group-meta">
+            {chairs.length > 0 && <span>{chairs.length > 1 ? 'Chairs' : 'Chair'}: <strong>{chairs.join(', ')}</strong></span>}
+            {n > 0 && <span>{n} {n === 1 ? 'member' : 'members'}</span>}
+          </p>
+        </div>
+      );
+    })
+  }
+</div>

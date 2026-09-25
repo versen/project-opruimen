@@ -1,0 +1,17 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { excerpt, formatDate, newsUrl } from '~/lib/news';
+
+interface Props { item: CollectionEntry<'news'>; showExcerpt?: boolean }
+const { item, showExcerpt = true } = Astro.props;
+const { title, date, image } = item.data;
+---
+
+<li class:list={['news-card', { 'no-image': !image }]}>
+  {image && <div class="news-thumb"><img src={image} alt="" loading="lazy" decoding="async" /></div>}
+  <div class="news-body">
+    <time class="date" datetime={date.toISOString().slice(0, 10)}>{formatDate(date)}</time>
+    <h3><a href={newsUrl(item)}>{title}</a></h3>
+    {showExcerpt && <p>{excerpt(item.body ?? '')}</p>}
+  </div>
+</li>

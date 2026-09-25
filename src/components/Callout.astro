@@ -1,0 +1,6 @@
+---
+interface Props { tone?: 'info' | 'warning' }
+const { tone = 'info' } = Astro.props;
+---
+
+<div class:list={['callout', tone]}><slot /></div>

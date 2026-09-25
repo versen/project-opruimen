@@ -1,0 +1,51 @@
+---
+import '~/styles/global.css';
+import Header from '~/components/Header.astro';
+import Footer from '~/components/Footer.astro';
+import { isPreview } from '~/lib/env';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const site = 'VERSEN';
+const { title, description = 'VERSEN is the Dutch National Association for Software Engineering.' } = Astro.props;
+const fullTitle = title ? `${title} · ${site}` : `${site} · Dutch National Association for Software Engineering`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {isPreview && <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:title" content={title ?? site} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="alternate" type="application/rss+xml" title="VERSEN news" href="/news/rss.xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Source+Sans+3:wght@400;600;700&display=swap"
+    />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    {isPreview && <div class="preview-banner">Preview of the new VERSEN website — not the live site. The Join form is disabled here.</div>}
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <slot name="after-main" />
+    <Footer />
+  </body>
+</html>

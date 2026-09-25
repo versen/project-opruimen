@@ -1,0 +1,49 @@
+---
+// Member list of a working-group page. Appended after the page text
+// automatically, unless the page places it itself with <GroupMembers slug="…" />.
+import { membersOf, isChair, group as getGroup, type Group, type Member } from '~/lib/groups';
+
+interface Props { group?: Group; slug?: string }
+const group = Astro.props.group ?? (await getGroup(Astro.props.slug!))!;
+const members = membersOf(group);
+const former = group.data.former;
+const isSymposium = group.id === 'working-groups/symposium';
+const title = group.data.archived ? 'Members' : isSymposium ? 'Current committee' : 'Members';
+---
+
+{
+  members.length > 0 && (
+    <section class="group-members">
+      <h2>{title}</h2>
+      <ul class="member-list">
+        {members.map((m: Member) => (
+          <li class:list={{ chair: isChair(m) }}>
+            <span class="name">{m.href ? <a href={m.href}>{m.name}</a> : m.name}</span>
+            {m.role && <span class="badge">{m.role.replace(/\s*·.*$/, '').replace(/\*$/, '')}</span>}
+            {m.org && <span class="org">{m.org}</span>}
+            {m.email && <a class="org" href={`mailto:${m.email}`}>{m.email}</a>}
+          </li>
+        ))}
+      </ul>
+      {group.id === 'working-groups/executive-board' && <p class="muted">Terms and photos are on the <a href="/about/board/">board page</a>.</p>}
+    </section>
+  )
+}
+{
+  former.length > 0 && (
+    <section class="group-members">
+      <h2>Previously</h2>
+      <p class="muted">Thank you for your work for the community.</p>
+      <ul class="member-list former">
+        {former.map((m) => (
+          <li><span class="name">{m.name}</span>{m.org && <span class="org">{m.org}</span>}</li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+{
+  !group.data.archived && (
+    <p class="callout">Want to contribute to this group? Contact {membersOf(group).some(isChair) ? 'its chair' : 'one of its members'}, or write to the <a href="mailto:secretary@versen.nl">VERSEN secretary</a>.</p>
+  )
+}

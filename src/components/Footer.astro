@@ -1,0 +1,38 @@
+---
+import { sections } from '~/data/nav';
+
+const year = new Date().getFullYear();
+// Hub links that duplicate the section heading are left out of the lists.
+const lists = sections.map((s) => ({ ...s, children: s.children.filter((c) => c.href !== s.href) }));
+---
+
+<footer class="site-footer">
+  <div class="wrap footer-top">
+    <div class="footer-about">
+      <img class="footer-logo" src="/assets/img/logo.svg" alt="VERSEN" width="130" height="38" />
+      <p>The Dutch National Association for Software Engineering. Administrative home: CWI, Amsterdam.</p>
+      <a href="mailto:info@versen.nl">info@versen.nl</a>
+    </div>
+    <nav class="footer-sitemap" aria-label="Sitemap">
+      {
+        lists.map((s) => (
+          <div>
+            <h2><a href={s.href}>{s.label}</a></h2>
+            <ul>
+              {s.children.map((c) => (
+                <li><a href={c.href}>{c.label}</a></li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </nav>
+  </div>
+  <div class="wrap footer-bottom">
+    <span>© {year} VERSEN · <span class="credit">Site maintained by the <a href="/working-groups/web/">Web working group</a></span></span>
+    <span>
+      <a href="/join/">Join</a> · <a href="/news/rss.xml">RSS</a> ·
+      <a href="https://github.com/versen/versen.github.io">Edit on GitHub</a>
+    </span>
+  </div>
+</footer>

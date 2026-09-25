@@ -1,0 +1,9 @@
+---
+interface Props { author: string; affiliation?: string }
+const { author, affiliation } = Astro.props;
+---
+
+<figure class="quote">
+  <p><slot /></p>
+  <footer>— {author}{affiliation && <>, <cite>{affiliation}</cite></>}</footer>
+</figure>

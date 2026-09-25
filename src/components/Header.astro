@@ -1,0 +1,68 @@
+---
+import { sections, join, sectionFor, sitePath } from '~/data/nav';
+
+const path = sitePath(Astro.url.pathname);
+const current = sectionFor(path);
+const isCurrent = (href: string) => href === path || href === path + '/';
+---
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/" aria-label="VERSEN home">
+      <img src="/assets/img/logo.svg" alt="VERSEN" width="150" height="44" />
+    </a>
+    <nav class="nav-desktop" aria-label="Main">
+      <ul>
+        {
+          sections.map((s) => (
+            <li>
+              <a href={s.href} aria-current={current === s ? 'page' : undefined}>
+                {s.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <a class="btn btn-primary header-join" href={join.href}>{join.label}</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menu">
+      <svg class="icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+      <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+    </button>
+  </div>
+  <nav id="mobile-menu" class="mobile-menu" aria-label="Main" hidden>
+    <div class="wrap">
+      {
+        sections.map((s) => (
+          <details open={current === s}>
+            <summary>{s.label}</summary>
+            <ul>
+              {s.children.map((c) => (
+                <li>
+                  <a href={c.href} aria-current={isCurrent(c.href) ? 'page' : undefined}>
+                    {c.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </details>
+        ))
+      }
+      <a class="btn btn-primary" href={join.href}>Become a member — it’s free</a>
+    </div>
+  </nav>
+</header>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  btn?.addEventListener('click', () => {
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!open));
+    if (menu) menu.hidden = open;
+    document.body.style.overflow = open ? '' : 'hidden';
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && btn?.getAttribute('aria-expanded') === 'true') btn.click();
+  });
+</script>

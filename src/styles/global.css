@@ -359,6 +359,8 @@ a:hover > .arrow::after, .arrow:hover::after { transform: translateX(3px); }
 .section-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 1rem; margin-bottom: 0.5rem; }
 .section-head h2 { margin: 0; }
 .section-head a { font-weight: 600; text-decoration: none; }
+.mission { margin-top: 1.25rem; padding: 1.5rem; background: var(--surface); border-radius: var(--radius-lg); border-left: 4px solid var(--primary); }
+.mission p { margin: 0; font: 400 clamp(1.1rem, 0.6vw + 1rem, 1.3rem)/1.55 var(--font-head); max-width: 70ch; }
 .spotlights { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); margin-top: 1.25rem; }
 .spot { position: relative; padding: 1.5rem; border-radius: var(--radius-lg); background: var(--surface); border: var(--card-border); display: flex; flex-direction: column; gap: 0.5rem; }
 .spot:hover { border-color: var(--primary); }

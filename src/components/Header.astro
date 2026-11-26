@@ -1,5 +1,5 @@
 ---
-import { sections, join, sectionFor, sitePath } from '~/data/nav';
+import { sections, join, contact, isExternal, sectionFor, sitePath } from '~/data/nav';
 
 const path = sitePath(Astro.url.pathname);
 const current = sectionFor(path);
@@ -24,6 +24,7 @@ const isCurrent = (href: string) => href === path || href === path + '/';
         }
       </ul>
     </nav>
+    <a class="header-contact" href={contact.href} aria-current={path === contact.href ? 'page' : undefined}>{contact.label}</a>
     <a class="btn btn-primary header-join" href={join.href}>{join.label}</a>
     <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menu">
       <svg class="icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
@@ -40,7 +41,7 @@ const isCurrent = (href: string) => href === path || href === path + '/';
               {s.children.map((c) => (
                 <li>
                   <a href={c.href} aria-current={isCurrent(c.href) ? 'page' : undefined}>
-                    {c.label}
+                    {c.label}{isExternal(c.href) && ' ↗'}
                   </a>
                 </li>
               ))}
@@ -48,6 +49,7 @@ const isCurrent = (href: string) => href === path || href === path + '/';
           </details>
         ))
       }
+      <a class="mobile-contact" href={contact.href}>{contact.label}</a>
       <a class="btn btn-primary" href={join.href}>Become a member — it’s free</a>
     </div>
   </nav>

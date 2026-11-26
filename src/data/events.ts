@@ -1,13 +1,15 @@
 // Newest first. `href` may point to an event page on this site or elsewhere.
-// Move an entry into `upcoming` to feature it on the home and events pages.
+// Put our own events in `upcoming` (with an ISO `date`); events announced in a
+// news item are added from its `event` front matter. See src/lib/events.ts.
 
 export interface EventItem {
   title: string;
   year: number;
   date?: string; // ISO date, when known
+  end?: string; // ISO date of the last day, for multi-day events
   place?: string;
   href?: string;
-  kind: 'VERSEN' | 'Symposium' | 'Partner';
+  kind: 'VERSEN' | 'Symposium' | 'Partner' | 'Community';
 }
 
 export const upcoming: EventItem[] = [];

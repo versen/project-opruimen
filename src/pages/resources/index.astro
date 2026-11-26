@@ -1,8 +1,14 @@
 ---
 import Page from '~/layouts/Page.astro';
-import Cards from '~/components/Cards.astro';
+import DocList from '~/components/DocList.astro';
+import { sections } from '~/data/nav';
+
+const items = [
+  ...sections.find((s) => s.label === 'Resources')!.children,
+  { label: 'Statutes and procedures', href: '/about/organization/#procedures', blurb: 'The statutes, and the procedures for working groups and funding requests.' },
+];
 ---
 
-<Page title="Resources" description="Practical help for researchers, educators and companies working with the Dutch software engineering community." full>
-  <Cards section="Resources" />
+<Page title="Resources" description="Documents to read, cite and download: our research agenda and manifesto, annual reports, newsletters, funded proposals and logos.">
+  <DocList items={items} />
 </Page>

@@ -1,0 +1,21 @@
+---
+// Ruled list of a section's pages, for hub pages. Pass a nav section label,
+// or `items` directly.
+import { sections, isExternal, type NavLink } from '~/data/nav';
+
+interface Props { section?: string; items?: NavLink[] }
+const { section, items } = Astro.props;
+const s = sections.find((x) => x.label === section);
+const list = items ?? (s ? s.children.filter((c) => c.href !== s.href) : []);
+---
+
+<ul class="doc-list">
+  {
+    list.map((l) => (
+      <li>
+        <h2><a href={l.href}>{l.label}{isExternal(l.href) && <span class="ext-mark"> ↗</span>}</a></h2>
+        {l.blurb && <p>{l.blurb}</p>}
+      </li>
+    ))
+  }
+</ul>

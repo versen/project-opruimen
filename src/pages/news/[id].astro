@@ -19,8 +19,8 @@ const { title, date, image } = item.data;
 const showHero = image && !(item.body ?? '').includes(image.split('/').pop()!);
 ---
 
-<Page title={title} description={excerpt(item.body ?? '', 160)}>
-  <p slot="head" class="article-meta"><time datetime={date.toISOString().slice(0, 10)}>{formatDate(date)}</time></p>
+<Page title={title} description={excerpt(item.body ?? '', 160)} lede={false}>
+  <time slot="kicker" class="kicker" datetime={date.toISOString().slice(0, 10)}>{formatDate(date)}</time>
   {showHero && <figure class="article-hero"><img src={image} alt="" /></figure>}
   <Content />
   <nav class="pager" aria-label="More news">

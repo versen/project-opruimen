@@ -1,6 +1,7 @@
 ---
 title: "First Call for Workshops — CAV 2027, Amsterdam"
 date: 2026-07-04
+event: { title: "CAV 2027", date: 2027-07-19, end: 2027-07-23, place: "Amsterdam", href: "https://conferences.i-cav.org/2027/" }
 ---
 
 Computer Aided Verification (CAV) 2027 will be hosted, for the first time in the rich history of CAV, in the Netherlands. CAV and the workshops will be hosted at KIT in the heart of Amsterdam.

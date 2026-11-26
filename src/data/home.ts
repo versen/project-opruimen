@@ -16,7 +16,7 @@ export const spotlights = [
     kicker: 'Thesis awards',
     title: 'Nominate an outstanding PhD or MSc thesis',
     text: 'Yearly awards for theses defended at a Dutch institution, presented at the SEN Symposium.',
-    href: '/awards/call/',
+    href: '/awards/thesis/',
     cta: 'See the call',
   },
   {
@@ -37,38 +37,24 @@ export const spotlights = [
   },
 ];
 
-export const activities = [
-  { title: 'Events', text: 'The SEN Symposium, seminar afternoons and tracks at ICT.OPEN.', href: '/events/' },
-  { title: 'Awards', text: 'PhD and MSc thesis awards, and our honorary fellows.', href: '/awards/' },
-  { title: 'Funding', text: 'Shared proposals and small grants for community initiatives.', href: '/resources/' },
-  { title: 'Education & industry', text: 'Curriculum work and MSc thesis matchmaking with companies.', href: '/resources/education/' },
-];
+// The mission as stated on /about/, set as one sentence and its five goals.
+export const mission = {
+  lead: 'VERSEN is the Dutch National Association for Software Engineering. Its mission is to bring together researchers, educators and practitioners in the field of software engineering in the Netherlands, who share five goals:',
+  goals: [
+    'advancing the field',
+    'raising public awareness of its challenges and opportunities',
+    'acquiring funding for groundbreaking and applied research',
+    'transferring academic results to society',
+    'representing software engineers to professional, legal and political entities',
+  ],
+};
 
-// Verbatim excerpts; the full quotes are on /about/manifesto/.
-export const endorsements = [
-  {
-    quote: 'The VERSEN manifesto hopes to inspire software researchers, yet I find it also provokes me as a software developer.',
-    name: 'Jeroen Heijmans',
-    org: 'RWS',
-  },
-  {
-    quote: "I endorse VERSEN's manifesto on Software Research and Education in the Netherlands, because I share the urgency for investing in software engineering knowledge and skills.",
-    name: 'Rik Farenhorst',
-    org: 'Independent consultant',
-  },
-  {
-    quote: 'We’re happy to see these challenges listed in the Manifesto on Software Research and Education and hope to cooperate in and benefit from the research.',
-    name: 'Dr. Frank Niessink',
-    org: 'Quality manager, ICTU',
-  },
-  {
-    quote: 'It is paramount that future software engineers are trained both in computer science fundamentals, and in up-to-date engineering methods to help improve the software landscape of the future.',
-    name: 'Dr. Magiel Bruntink',
-    org: 'Head of Research, Software Improvement Group',
-  },
-  {
-    quote: 'I strongly believe that we should look at developing secure software as a craft and culture by investing in software engineers helping them to learn and use the right skills.',
-    name: 'Danny Onwezen',
-    org: 'Chairman, Secure Software Alliance',
-  },
+// What visitors come to do. The working-groups text is filled in with live counts.
+export const tasks = [
+  { title: 'Nominate a thesis', text: 'Yearly awards for the best PhD and MSc theses in software engineering.', href: '/awards/thesis/' },
+  { title: 'Request funding', text: 'VERSEN money for an event or initiative that supports our mission.', href: '/funding/' },
+  { title: 'Come to the SEN Symposium', text: 'The yearly meeting of the Dutch software engineering community.', href: 'https://www.sen-symposium.nl/' },
+  { title: 'Send us news', text: 'An award, a defence, a grant, a vacancy or an event for the website and newsletter.', href: '/suggest-news/' },
+  { title: 'Work with us as a company', text: 'Host an MSc thesis student, advise us, or support the association.', href: '/about/for-companies/' },
+  { title: 'Join a working group', text: '', href: '/working-groups/' },
 ];

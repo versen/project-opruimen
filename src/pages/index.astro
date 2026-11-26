@@ -1,17 +1,21 @@
 ---
 import Base from '~/layouts/Base.astro';
 import NewsCard from '~/components/NewsCard.astro';
+import Follow from '~/components/Follow.astro';
 import { allNews } from '~/lib/news';
-import { stats, spotlights, activities, endorsements } from '~/data/home';
-import { upcoming } from '~/data/events';
-import { groups, groupUrl, chairsOf, membersOf } from '~/lib/groups';
+import { stats, spotlights, mission, tasks } from '~/data/home';
+import { upcomingEvents, formatEventDate } from '~/lib/events';
+import { groups, membersOf } from '~/lib/groups';
+import { isExternal } from '~/data/nav';
 
-const latest = (await allNews()).slice(0, 3);
-const featured = upcoming.slice(0, 1);
-const shown = spotlights.filter((s) => s.show).slice(0, 3 - featured.length);
-const ext = (href: string) => /^https?:/.test(href);
+const news = await allNews();
+const latest = news.slice(0, 3);
+const next = (await upcomingEvents())[0];
+const shown = spotlights.filter((s) => s.show).slice(0, 2);
 const activeGroups = await groups();
 const volunteers = new Set(activeGroups.flatMap((g) => membersOf(g).map((m) => m.name))).size;
+const taskText = (t: (typeof tasks)[number]) =>
+  t.href === '/working-groups/' ? `${volunteers} people in ${activeGroups.length} groups do the work behind VERSEN. Any member can take part.` : t.text;
 ---
 
 <Base>
@@ -20,13 +24,10 @@ const volunteers = new Set(activeGroups.flatMap((g) => membersOf(g).map((m) => m
       <div>
         <span class="kicker">VEReniging Software Engineering Nederland</span>
         <h1>The Dutch community for <em>software engineering</em></h1>
-        <p class="lede">
-          The association of software engineering researchers, educators and practitioners in the Netherlands, run by
-          its members through working groups, events and awards.
-        </p>
+        <p class="lede">Researchers, educators and practitioners, working together through working groups, events and awards.</p>
         <div class="btn-row">
           <a class="btn btn-primary" href="/join/">Join VERSEN — free</a>
-          <a class="btn btn-ghost" href="/about/manifesto/">Read the manifesto</a>
+          <a class="btn btn-ghost" href="/resources/sria/">Read our research agenda</a>
         </div>
         <ul class="stats">
           {stats.map((s) => <li><strong>{s.value}</strong><span>{s.label}</span></li>)}
@@ -39,28 +40,28 @@ const volunteers = new Set(activeGroups.flatMap((g) => membersOf(g).map((m) => m
   </section>
 
   {
-    (featured.length > 0 || shown.length > 0) && (
+    (next || shown.length > 0) && (
       <section class="wrap" aria-labelledby="spot-h">
         <div class="notices">
-        <h2 id="spot-h" class="notices-label">{featured.length ? 'Coming up' : 'Right now'}</h2>
-        <ul>
-          {featured.map((e) => (
-            <li>
-              <a href={e.href}>
-                <span class="tag versen">Event</span>
-                <span class="notice-title">{e.title}{e.date && <span class="muted"> · {e.date}</span>}</span>
-              </a>
-            </li>
-          ))}
-          {shown.map((s) => (
-            <li>
-              <a href={s.href}>
-                <span class="tag">{s.kicker}</span>
-                <span class="notice-title">{s.title}{ext(s.href) && ' ↗'}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
+          <h2 id="spot-h" class="notices-label">Right now</h2>
+          <ul>
+            {next && (
+              <li>
+                <a href={next.href}>
+                  <span class="tag versen">Upcoming</span>
+                  <span class="notice-title">{next.title}{next.date && <span class="muted"> · {formatEventDate(next.date)}</span>}</span>
+                </a>
+              </li>
+            )}
+            {shown.map((s) => (
+              <li>
+                <a href={s.href}>
+                  <span class="tag">{s.kicker}</span>
+                  <span class="notice-title">{s.title}{isExternal(s.href) && ' ↗'}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
     )
@@ -72,13 +73,10 @@ const volunteers = new Set(activeGroups.flatMap((g) => membersOf(g).map((m) => m
       <a href="/about/" class="arrow">About VERSEN </a>
     </div>
     <div class="mission">
-      <p>
-        VERSEN is the Dutch National Association for Software Engineering. Its mission is to bring together researchers,
-        educators and practitioners in the field of software engineering in the Netherlands, who share the common goals of
-        advancing the field, raising public awareness of its challenges and opportunities, acquiring funding for
-        groundbreaking and applied research, transferring academic results to society, and representing software engineers
-        to professional, legal and political entities.
-      </p>
+      <p>{mission.lead}</p>
+      <ul>
+        {mission.goals.map((g) => <li>{g}</li>)}
+      </ul>
     </div>
   </section>
 
@@ -87,73 +85,27 @@ const volunteers = new Set(activeGroups.flatMap((g) => membersOf(g).map((m) => m
       <h2 id="news-h">Latest news</h2>
       <a href="/news/" class="arrow">All news </a>
     </div>
-    <ul class="news-list">
+    <ul class="news-list even">
       {latest.map((item) => <NewsCard item={item} />)}
     </ul>
+    <Follow />
   </section>
 
   <section class="section wrap" aria-labelledby="do-h">
     <div class="section-head">
-      <h2 id="do-h">What we do</h2>
-      <a href="/about/" class="arrow">About VERSEN </a>
-    </div>
-    <div class="activities">
-      {
-        activities.map((a) => (
-          <div class="activity">
-            <h3><a href={a.href}>{a.title}</a></h3>
-            <p>{a.text}</p>
-          </div>
-        ))
-      }
-    </div>
-  </section>
-
-  <section class="section wrap" aria-labelledby="wg-h">
-    <div class="section-head">
-      <h2 id="wg-h">VERSEN runs on its working groups</h2>
+      <h2 id="do-h">Take part</h2>
       <a href="/working-groups/" class="arrow">All working groups </a>
     </div>
-    <p class="muted">{volunteers} people in {activeGroups.length} groups do the work behind our events, funding, education and communication.</p>
-    <div class="groups-row">
+    <ul class="tasks">
       {
-        activeGroups.map((g) => {
-          const chairs = chairsOf(g).map((m) => m.name);
-          const n = membersOf(g).length;
-          return (
-            <div class="card group-card">
-              <h3><a href={groupUrl(g)}>{g.data.title}</a></h3>
-              {g.data.description && <p>{g.data.description}</p>}
-              <p class="group-meta">
-                {chairs.length > 0 && <span>{chairs.length > 1 ? 'Chairs' : 'Chair'}: <strong>{chairs.join(', ')}</strong></span>}
-                {n > 0 && <span>{n} {n === 1 ? 'member' : 'members'}</span>}
-              </p>
-            </div>
-          );
-        })
-      }
-      <div class="card join-card">
-        <h3><a href="/working-groups/">Join or start a group</a></h3>
-        <p>Any member can take part, or propose a new working group.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section wrap" aria-labelledby="end-h">
-    <div class="section-head">
-      <h2 id="end-h">Why the manifesto matters</h2>
-      <a href="/about/manifesto/" class="arrow">Read the manifesto </a>
-    </div>
-    <div class="endorse">
-      {
-        endorsements.map((e) => (
-          <figure>
-            <blockquote>“{e.quote}”</blockquote>
-            <figcaption><strong>{e.name}</strong>{e.org}</figcaption>
-          </figure>
+        tasks.map((t) => (
+          <li>
+            <h3><a href={t.href}>{t.title}{isExternal(t.href) && <span class="ext-mark"> ↗</span>}</a></h3>
+            <p>{taskText(t)}</p>
+          </li>
         ))
       }
-    </div>
+    </ul>
   </section>
 
   <section class="join-band" slot="after-main">

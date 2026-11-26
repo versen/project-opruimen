@@ -1,15 +1,17 @@
 ---
 import Base from './Base.astro';
-import { sectionFor, sitePath } from '~/data/nav';
+import { sectionFor, sitePath, isExternal } from '~/data/nav';
 
 interface Props {
   title: string;
   description?: string;
   /** Wider content column, for tables and grids. */
   full?: boolean;
+  /** Show the description under the title (it is always used as meta description). */
+  lede?: boolean;
 }
 
-const { title, description, full = false } = Astro.props;
+const { title, description, full = false, lede = true } = Astro.props;
 const path = sitePath(Astro.url.pathname);
 const section = sectionFor(path);
 const isCurrent = (href: string) => href === path || href === path + '/';
@@ -28,7 +30,7 @@ const atHub = section && isCurrent(section.href);
       }
       <slot name="kicker" />
       <h1>{title}</h1>
-      {description && <p class="lede">{description}</p>}
+      {lede && description && <p class="lede">{description}</p>}
       <slot name="head" />
     </div>
   </div>
@@ -40,11 +42,14 @@ const atHub = section && isCurrent(section.href);
             <p class="subnav-title">{section.label}</p>
             <ul>
               {section.children.map((c) => (
-                <li>
-                  <a href={c.href} aria-current={isCurrent(c.href) ? 'page' : undefined}>
-                    {c.label}
-                  </a>
-                </li>
+                <>
+                  {c.group && <li class="subnav-group" aria-hidden="true">{c.group}</li>}
+                  <li>
+                    <a href={c.href} aria-current={isCurrent(c.href) ? 'page' : undefined}>
+                      {c.label}{isExternal(c.href) && ' ↗'}
+                    </a>
+                  </li>
+                </>
               ))}
             </ul>
           </nav>
@@ -57,3 +62,10 @@ const atHub = section && isCurrent(section.href);
   </div>
   <slot name="after-main" slot="after-main" />
 </Base>
+
+<script>
+  // On phones the sub-navigation is a row of chips; make sure the current one is visible.
+  const current = document.querySelector<HTMLElement>('.subnav a[aria-current]');
+  const row = current?.closest('ul');
+  if (current && row && row.scrollWidth > row.clientWidth) row.scrollLeft = current.offsetLeft - 16;
+</script>

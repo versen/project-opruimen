@@ -8,6 +8,9 @@ const news = defineCollection({
     title: z.string(),
     date: z.coerce.date(),
     image: z.string().optional(),
+    // Set on items that announce a dated event, so it shows under Upcoming on
+    // /events/ and the home page until the day has passed.
+    event: z.object({ title: z.string(), date: z.coerce.date(), end: z.coerce.date().optional(), place: z.string().optional(), href: z.string().optional() }).optional(),
   }),
 });
 

@@ -1,12 +1,17 @@
 ---
 import Page from '~/layouts/Page.astro';
-import { upcoming, past, type EventItem } from '~/data/events';
+import { past, type EventItem } from '~/data/events';
+import { upcomingEvents, formatEventDate } from '~/lib/events';
+
+const all = await upcomingEvents();
+const ours = all.filter((e) => e.kind !== 'Community');
+const community = all.filter((e) => e.kind === 'Community');
 
 const years = [...new Set(past.map((e) => e.year))];
 const ext = (e: EventItem) => e.href && /^https?:/.test(e.href);
 ---
 
-<Page title="Events" description="The yearly SEN Symposium, VERSEN seminar afternoons, and tracks we co-organize with partners." full>
+<Page title="Events" description="The yearly SEN Symposium, VERSEN seminar afternoons, and tracks we co-organize with partners.">
   <section class="feature">
     <div>
       <span class="kicker">Every year</span>
@@ -18,14 +23,26 @@ const ext = (e: EventItem) => e.href && /^https?:/.test(e.href);
 
   <h2>Upcoming</h2>
   {
-    upcoming.length ? (
+    ours.length ? (
       <ul class="event-list">
-        {upcoming.map((e) => (
-          <li><a href={e.href}>{e.title}</a><span class:list={['tag', e.kind.toLowerCase()]}>{e.kind}</span>{(e.date || e.place) && <span class="meta">{[e.date, e.place].filter(Boolean).join(' · ')}</span>}</li>
+        {ours.map((e) => (
+          <li><a href={e.href}>{e.title}{ext(e) && ' ↗'}</a><span class:list={['tag', e.kind.toLowerCase()]}>{e.kind}</span>{(e.date || e.place) && <span class="meta">{[formatEventDate(e.date), e.place].filter(Boolean).join(' · ')}</span>}</li>
         ))}
       </ul>
     ) : (
-      <p class="muted">Nothing announced yet — new events appear here and in the <a href="/news/">news</a>. Want to organize one? Talk to the <a href="/working-groups/community-events/">Community Events group</a>.</p>
+      <p class="muted">No VERSEN event is announced yet; new ones appear here and in the <a href="/news/">news</a>. Want to organize one? Talk to the <a href="/working-groups/community-events/">Community Events group</a>.</p>
+    )
+  }
+  {
+    community.length > 0 && (
+      <>
+        <h3>In the community</h3>
+        <ul class="event-list">
+          {community.map((e) => (
+            <li><a href={e.href}>{e.title}{ext(e) && ' ↗'}</a>{(e.date || e.place) && <span class="meta">{[formatEventDate(e.date), e.place].filter(Boolean).join(' · ')}</span>}</li>
+          ))}
+        </ul>
+      </>
     )
   }
 

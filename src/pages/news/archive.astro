@@ -1,31 +1,66 @@
 ---
 import Page from '~/layouts/Page.astro';
-import { allNews, newsUrl } from '~/lib/news';
+import { allNews, newsUrl, excerpt } from '~/lib/news';
+import { links } from '~/data/nav';
 
 const news = await allNews();
 const years = [...new Set(news.map((n) => n.data.date.getUTCFullYear()))];
-const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', timeZone: 'UTC' });
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const fmt = (d: Date) => `${String(d.getUTCDate()).padStart(2, '0')} ${months[d.getUTCMonth()]}`;
 ---
 
 <Page title="News archive" description={`All ${news.length} news items, newest first.`}>
-  <ul class="year-jump" aria-label="Jump to year">
-    {years.map((y) => <li><a href={`#y${y}`}>{y}</a></li>)}
-  </ul>
-  {
-    years.map((y) => (
-      <section>
-        <h2 id={`y${y}`}>{y}</h2>
-        <ul class="archive-list">
-          {news
-            .filter((n) => n.data.date.getUTCFullYear() === y)
-            .map((n) => (
-              <li>
-                <time class="date" datetime={n.data.date.toISOString().slice(0, 10)}>{fmt(n.data.date)}</time>
-                <a href={newsUrl(n)}>{n.data.title}</a>
-              </li>
-            ))}
-        </ul>
-      </section>
-    ))
-  }
+  <div data-archive>
+    <div class="archive-tools">
+      <input class="filter" type="search" placeholder="Search the news: a name, a topic, a year…" aria-label="Search the news archive" autocomplete="off" />
+      <a href={links.newsletters}>Newsletter archive ↗</a>
+    </div>
+    <p class="archive-count" aria-live="polite" hidden></p>
+    <ul class="year-jump" aria-label="Jump to year">
+      {years.map((y) => <li><a href={`#y${y}`}>{y}</a></li>)}
+    </ul>
+    {
+      years.map((y) => (
+        <section>
+          <h2 id={`y${y}`}>{y}</h2>
+          <ul class="archive-list">
+            {news
+              .filter((n) => n.data.date.getUTCFullYear() === y)
+              .map((n) => (
+                <li data-text={`${n.data.title} ${y} ${excerpt(n.body ?? '', 4000)}`.toLowerCase()}>
+                  <time class="date" datetime={n.data.date.toISOString().slice(0, 10)}>{fmt(n.data.date)}</time>
+                  <a href={newsUrl(n)}>{n.data.title}</a>
+                </li>
+              ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
 </Page>
+
+<script>
+  // Client-side search over title and text: every word typed must appear.
+  const root = document.querySelector<HTMLElement>('[data-archive]');
+  const input = root?.querySelector<HTMLInputElement>('.filter');
+  const count = root?.querySelector<HTMLElement>('.archive-count');
+  const jump = root?.querySelector<HTMLElement>('.year-jump');
+  const items = [...(root?.querySelectorAll<HTMLElement>('.archive-list li') ?? [])];
+  input?.addEventListener('input', () => {
+    const words = input.value.toLowerCase().split(/\s+/).filter(Boolean);
+    let shown = 0;
+    for (const li of items) {
+      const hit = words.every((w) => li.dataset.text!.includes(w));
+      li.hidden = !hit;
+      if (hit) shown++;
+    }
+    root!.querySelectorAll<HTMLElement>('section').forEach((s) => {
+      s.hidden = !s.querySelector('li:not([hidden])');
+    });
+    if (jump) jump.hidden = words.length > 0;
+    if (count) {
+      count.hidden = words.length === 0;
+      count.textContent = shown === 1 ? '1 item found' : `${shown} items found`;
+    }
+  });
+</script>

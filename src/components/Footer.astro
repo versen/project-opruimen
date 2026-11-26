@@ -1,9 +1,10 @@
 ---
-import { sections } from '~/data/nav';
+import { sections, links, contact, isExternal } from '~/data/nav';
 
 const year = new Date().getFullYear();
 // Hub links that duplicate the section heading are left out of the lists.
-const lists = sections.map((s) => ({ ...s, children: s.children.filter((c) => c.href !== s.href) }));
+// The working groups are one click away on their own page; listing all of them here made the footer heavier than most pages.
+const lists = sections.map((s) => ({ ...s, children: s.label === 'Working groups' ? [] : s.children.filter((c) => c.href !== s.href) }));
 ---
 
 <footer class="site-footer">
@@ -20,7 +21,7 @@ const lists = sections.map((s) => ({ ...s, children: s.children.filter((c) => c.
             <h2><a href={s.href}>{s.label}</a></h2>
             <ul>
               {s.children.map((c) => (
-                <li><a href={c.href}>{c.label}</a></li>
+                <li><a href={c.href}>{c.label}{isExternal(c.href) && ' ↗'}</a></li>
               ))}
             </ul>
           </div>
@@ -31,7 +32,7 @@ const lists = sections.map((s) => ({ ...s, children: s.children.filter((c) => c.
   <div class="wrap footer-bottom">
     <span>© {year} VERSEN · <span class="credit">Site maintained by the <a href="/working-groups/web/">Web working group</a></span></span>
     <span>
-      <a href="/join/">Join</a> · <a href="/news/rss.xml">RSS</a> ·
+      <a href="/join/">Join</a> · <a href={contact.href}>{contact.label}</a> · <a href={links.linkedin}>LinkedIn</a> · <a href="/news/rss.xml">RSS</a> ·{' '}
       <a href="https://github.com/versen/versen.github.io">Edit on GitHub</a>
     </span>
   </div>
